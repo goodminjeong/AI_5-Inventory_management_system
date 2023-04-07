@@ -26,3 +26,19 @@ class Product(models.Model):
     # def save(self, *args, **kwargs):
     #     # 생성될 때 stock quantity를 0으로 초기화 로직
     #     super().save(*args, **kwargs)
+
+
+class Inbound(Product):
+    """
+                입고 모델입니다.
+                상품, 수량, 입고 날짜, 금액 필드를 작성합니다.
+                """
+    class Meta:
+        db_table = "inbound"
+        verbose_name = "입고"
+
+    product = Product()
+    name = Product.name
+    price = Product.price
+    quantity = models.IntegerField(max_length=32, verbose_name='상품수량')
+    inbound_date = models.DateTimeField(auto_now_add=True)

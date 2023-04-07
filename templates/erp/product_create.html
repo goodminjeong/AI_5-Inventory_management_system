@@ -548,7 +548,7 @@
 </style>
 
 <div id="content-main">
-    <form method="post" action="/erp/product-create/" id="product_form" novalidate=""><input type="hidden"
+    <form method="post" action="/product-create/" id="product_form" novalidate=""><input type="hidden"
             name="csrfmiddlewaretoken" value="mVBr8GO4AW8RkrjjojLS8Rih0n5aovVS00u5U8BK7lgyw4c9BJt9pQ4CiAlqVplj">
         {% csrf_token %}
         <div>
@@ -601,9 +601,13 @@
                     </div>
                 </div>
             </fieldset>
-
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
             <div class="submit-row">
-                <input type="submit" value="Save" class="default" name="_save">
+                <input type="submit" value="등록" class="default" name="_save">
             </div>
             <script id="django-admin-form-add-constants" src="/static/admin/js/change_form.js" data-model-name="product"
                 async="">

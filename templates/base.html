@@ -30,17 +30,19 @@
             margin-top: 25px
         }
     </style>
+    {% block style %}
+    {% endblock %}
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="/erp/product-list">재고관리시스템</a>
+            <a class="navbar-brand" href="/product-list">재고관리시스템</a>
             {% if user.is_authenticated %}
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/erp/product-create"> 상품등록 <span class="sr-only"></span></a>
+                        <a class="nav-link" href="/product-create"> 상품등록 <span class="sr-only"></span></a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="#"> 입고 <span class="sr-only"></span></a>

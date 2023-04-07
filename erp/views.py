@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Product
-from django.contrib import messages
 
 # Create your views here.
 
@@ -9,7 +8,7 @@ from django.contrib import messages
 def home(request):
     user = request.user.is_authenticated
     if user:
-        return render(request, 'erp/home.html')
+        return redirect('/product-list')
     else:
         return redirect('/login')
 
@@ -38,6 +37,9 @@ def product_create(request):
         price = request.POST.get('price', '')
         size = request.POST.get('size', '')
 
+        if code == '' or name == '' or price == '' or size == '---------':
+            return render(request, 'erp/product_create.html', {'error': '내용을 채우십시오.'})
+
         Product.objects.create(
             code=code, name=name, description=description, price=price, size=size)
-    return redirect('erp/product_list')
+    return redirect('/product-list')
