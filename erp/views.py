@@ -60,8 +60,6 @@ def inbound_create(request):
 
         if code == '' or quantity == '':
             return render(request, 'erp/inbound_create.html', {'error': '내용을 입력하세요'})
-        elif not type(quantity) == 'number':
-            return render(request, 'erp/inbound_create.html', {'error': '수량에는 숫자만 입력해주세요'})
         else:
             product = Product.objects.get(code=request.POST.get('code'))
 
@@ -89,8 +87,6 @@ def outbound_create(request):
 
         if code == '' or quantity == '':
             return render(request, 'erp/outbound.html', {'error': '내용을 입력하세요'})
-        elif not type(quantity) == 'number':
-            return render(request, 'erp/outbound.html', {'error': '수량에는 숫자만 입력해주세요'})
         else:
             product = Product.objects.get(code=request.POST.get('code'))
 
