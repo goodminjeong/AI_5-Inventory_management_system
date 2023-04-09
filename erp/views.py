@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Product
+from .models import Product, Inbound
+from django.db import transaction
 
 # Create your views here.
 
@@ -42,4 +43,33 @@ def product_create(request):
 
         Product.objects.create(
             code=code, name=name, description=description, price=price, size=size)
+
+    return redirect('/product-list')
+
+
+@login_required
+# @transaction.atomic
+def inbound_create(request):
+    # 상품 입고 view
+    # 입고 기록 생성
+    if request.method == 'GET':
+        user = request.user.is_authenticated
+        if user:
+            return render(request, 'erp/inbound_create.html')
+        else:
+            return render(request, 'accounts/signup.html')
+    elif request.method == 'POST':
+        product = Product.objects.get(code=request.POST.get('code'))
+        quantity = request.POST.get('quantity', '')
+        print(quantity)
+        if quantity == '':
+            return render(request, 'erp/inbound_create.html', {'error': '수량은 필수값입니다.'})
+
+        Inbound.objects.create(product=product, quantity=quantity)
+
+    # 입고 수량 조정
+    product.quantity += int(quantity)
+    product.save()
+    print(product.quantity)
+
     return redirect('/product-list')
