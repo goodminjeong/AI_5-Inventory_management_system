@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Product, Inbound
-from django.db import transaction
+from .models import Product, Inbound, Outbound
 
 # Create your views here.
 
@@ -26,11 +25,8 @@ def product_list(request):
 def product_create(request):
     # 상품 등록 view
     if request.method == 'GET':
-        user = request.user.is_authenticated
-        if user:
-            return render(request, 'erp/product_create.html')
-        else:
-            return render(request, 'accounts/signup.html')
+        return render(request, 'erp/product_create.html')
+
     elif request.method == 'POST':
         code = request.POST.get('code', '')
         name = request.POST.get('name', '')
@@ -38,9 +34,11 @@ def product_create(request):
         price = request.POST.get('price', '')
         size = request.POST.get('size', '')
 
-        if code == '' or name == '' or price == '' or size == '---------':
-            return render(request, 'erp/product_create.html', {'error': '내용을 채우십시오.'})
-
+        if code == '' or name == '' or price == '' or size == '':
+            return render(request, 'erp/product_create.html', {'error': '내용을 입력하세요'})
+        exist_code = Product.objects.filter(code=code)
+        if exist_code:
+            return render(request, 'erp/product_create.html', {'error': '동일한 상품 코드가 존재합니다'})
         Product.objects.create(
             code=code, name=name, description=description, price=price, size=size)
 
@@ -53,23 +51,57 @@ def inbound_create(request):
     # 상품 입고 view
     # 입고 기록 생성
     if request.method == 'GET':
-        user = request.user.is_authenticated
-        if user:
-            return render(request, 'erp/inbound_create.html')
-        else:
-            return render(request, 'accounts/signup.html')
+        all_products = Product.objects.all().order_by('code')
+        return render(request, 'erp/inbound_create.html', {'products': all_products})
+
     elif request.method == 'POST':
-        product = Product.objects.get(code=request.POST.get('code'))
+        code = request.POST.get('code', '')
         quantity = request.POST.get('quantity', '')
-        print(quantity)
-        if quantity == '':
-            return render(request, 'erp/inbound_create.html', {'error': '수량은 필수값입니다.'})
+
+        if code == '' or quantity == '':
+            return render(request, 'erp/inbound_create.html', {'error': '내용을 입력하세요'})
+        elif not type(quantity) == 'number':
+            return render(request, 'erp/inbound_create.html', {'error': '수량에는 숫자만 입력해주세요'})
+        else:
+            product = Product.objects.get(code=request.POST.get('code'))
 
         Inbound.objects.create(product=product, quantity=quantity)
 
     # 입고 수량 조정
     product.quantity += int(quantity)
     product.save()
-    print(product.quantity)
+
+    return redirect('/product-list')
+
+
+@login_required
+# @transaction.atomic
+def outbound_create(request):
+    # 상품 출고 view
+    # 출고 기록 생성
+    if request.method == 'GET':
+        all_products = Product.objects.all().order_by('code')
+        return render(request, 'erp/outbound.html', {'products': all_products})
+
+    elif request.method == 'POST':
+        code = request.POST.get('code', '')
+        quantity = request.POST.get('quantity', '')
+
+        if code == '' or quantity == '':
+            return render(request, 'erp/outbound.html', {'error': '내용을 입력하세요'})
+        elif not type(quantity) == 'number':
+            return render(request, 'erp/outbound.html', {'error': '수량에는 숫자만 입력해주세요'})
+        else:
+            product = Product.objects.get(code=request.POST.get('code'))
+
+        Outbound.objects.create(product=product, quantity=quantity)
+
+    # 출고 수량 조정
+    out_quantity = product.quantity - int(quantity)
+    if out_quantity >= 0:
+        product.quantity = out_quantity
+        product.save()
+    else:
+        return render(request, 'erp/outbound.html', {'error': f'재고가 부족합니다. 현재 수량: {product.quantity}개'})
 
     return redirect('/product-list')

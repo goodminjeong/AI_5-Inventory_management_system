@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+출고
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="wrap">
+        <a href="/outbound-create" style="text-decoration: none; color: black;">
+            <h2 class="title-center">출고</h2>
+        </a>
+        <form class="form-area" method="post" action="/outbound-create/">
+            {% csrf_token %}
+            <div class="form-group mt-2 mb-2">
+                <label for="code">상품코드</label>
+                <select name="code" class="form-select" aria-label="Default select example">
+                    <option value="">상품코드를 선택하세요</option>
+                    {% for product in products %}
+                    <option value="{{product.code}}">{{product.code}}</option>
+                    {% endfor%}
+                </select>
+            </div>
+            <div class="form-group mt-2 mb-2">
+                <label for="quantity">수량</label>
+                <input type="int" class="form-control" id="quantity" name="quantity">
+            </div>
+            <hr>
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+            <div style="float: right">
+                <button type="submit" class="btn btn-primary">등록</button>
+                <a href="/product-list" class="btn btn-secondary">재고 관리</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

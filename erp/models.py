@@ -34,14 +34,23 @@ class Product(models.Model):
 
 
 class Inbound(models.Model):
-    """
-                입고 모델입니다.
-                상품, 수량, 입고 날짜, 금액 필드를 작성합니다.
-                """
     class Meta:
         db_table = "inbound"
         verbose_name = "입고"
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, verbose_name='상품코드')
     quantity = models.IntegerField(verbose_name='수량')
-    inbound_date = models.DateTimeField(auto_now_add=True)
+    inbound_date = models.DateTimeField(auto_now_add=True, verbose_name='입고날짜')
+
+
+class Outbound(models.Model):
+    class Meta:
+        db_table = "outbound"
+        verbose_name = "출고"
+
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, verbose_name='상품코드')
+    quantity = models.IntegerField(verbose_name='수량')
+    outbound_date = models.DateTimeField(
+        auto_now_add=True, verbose_name='출고날짜')
