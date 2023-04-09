@@ -3,47 +3,46 @@
 상품 목록
 {% endblock %}
 
+
 {% block content %}
-
-<div id="list-example" class="list-group">
-    <a class="list-group-item list-group-item-action" href="#list-item-1">후드티</a>
-    <a class="list-group-item list-group-item-action" href="#list-item-2">청바지</a>
-</div>
-<div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
-
-    <h4 id="list-item-1">후드티</h4>
-    <div class="card">
-        <div class="card-body">
-            {% for product in products %}
-            {% if 'hood' in product.code %}
-            <h5 class="card-title">코드: {{ product.code }}</h5>
-            <p class="card-text">상품명: {{ product.name }}</p>
-            <p class="card-text">설명: {{ product.description }}</p>
-            <p class="card-text">가격: {{ product.price }}</p>
-            <p class="card-text">사이즈: {{ product.size }}</p>
-            <p class="card-text">수량: {{ product.quantity }}</p>
-            <hr>
-        </div>
-        {% endif %}
-        {% endfor %}
+<div class="list-box">
+    <div id="list-example" class="list-group">
+        <a class="list-group-item list-group-item-action" href="#list-item-1">후드티</a>
+        <a class="list-group-item list-group-item-action" href="#list-item-2">청바지</a>
     </div>
-    <h4 id="list-item-2">청바지</h4>
-    <div class="card">
-        <div class="card-body">
-            {% for product in products %}
-            {% if 'jean' in product.code %}
-            <h5 class="card-title">코드: {{ product.code }}</h5>
-            <p class="card-text">상품명: {{ product.name }}</p>
-            <p class="card-text">설명: {{ product.description }}</p>
-            <p class="card-text">가격: {{ product.price }}</p>
-            <p class="card-text">사이즈: {{ product.size }}</p>
-            <p class="card-text">수량: {{ product.quantity }}</p>
-            <hr>
+    <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+
+        <h4 id="list-item-1">후드티</h4>
+        {% for product in products %}
+        {% if 'hood' in product.code %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.code }}</h5>
+                <p class="card-text">상품명: {{ product.name }}</p>
+                <p class="card-text">설명: {{ product.description }}</p>
+                <p class="card-text">가격: {{ product.price }}</p>
+                <p class="card-text">사이즈: {{ product.size }}</p>
+                <p class="card-text">수량: {{ product.quantity }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
         </div>
-        {% endif %}
-        {% endfor %}
+        <h4 id="list-item-2">청바지</h4>
+        {% for product in products %}
+        {% if 'jean' in product.code %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.code }}</h5>
+                <p class="card-text">상품명: {{ product.name }}</p>
+                <p class="card-text">설명: {{ product.description }}</p>
+                <p class="card-text">가격: {{ product.price }}</p>
+                <p class="card-text">사이즈: {{ product.size }}</p>
+                <p class="card-text">수량: {{ product.quantity }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
     </div>
-    <hr>
 </div>
 
 {% endblock %}
